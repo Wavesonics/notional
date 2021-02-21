@@ -4,7 +4,7 @@ plugins {
     kotlin("android")
 }
 
-group = "com.darkrockstudios.apps"
+group = "com.darkrockstudios.apps.nortional.android"
 version = "1.0"
 
 repositories {

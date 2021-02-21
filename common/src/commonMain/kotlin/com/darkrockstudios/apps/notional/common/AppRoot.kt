@@ -1,13 +1,22 @@
-package com.darkrockstudios.apps.common
+package com.darkrockstudios.apps.notional.common
 
-import androidx.compose.runtime.*
-import com.arkivanov.decompose.*
+import androidx.compose.runtime.Composable
+import com.arkivanov.decompose.ComponentContext
 import com.arkivanov.decompose.extensions.compose.jetbrains.Children
+import com.arkivanov.decompose.pop
+import com.arkivanov.decompose.push
+import com.arkivanov.decompose.router
 import com.arkivanov.decompose.statekeeper.Parcelable
 import com.arkivanov.decompose.statekeeper.Parcelize
+import com.darkrockstudios.apps.notional.common.platform.SaveManager
+import com.darkrockstudios.apps.notional.common.screens.ProjectComponent
+import com.darkrockstudios.apps.notional.common.screens.ProjectPicker
+import com.darkrockstudios.apps.notional.common.screens.ProjectPickerScreen
+import com.darkrockstudios.apps.notional.common.screens.ProjectScreen
 
 
 class AppRoot(
+    private val saveManager: SaveManager,
     componentContext: ComponentContext
 ) : Component, ComponentContext by componentContext {
 
@@ -26,7 +35,11 @@ class AppRoot(
                 ProjectPicker(componentContext, onProjectSelected = ::onProjectSelected).asContent { ProjectPickerScreen(it) }
             }
             is Config.Project -> {
-                ProjectComponent(componentContext, projectName = config.projectName, onFinished = { router.pop() }).asContent { ProjectScreen(it) }
+                ProjectComponent(
+                    componentContext,
+                    saveManager = saveManager,
+                    projectName = config.projectName,
+                    onFinished = { router.pop() }).asContent { ProjectScreen(it) }
             }
         }
 

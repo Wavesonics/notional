@@ -1,4 +1,4 @@
-package com.darkrockstudios.apps.common
+package com.darkrockstudios.apps.notional.common.platform
 
 actual fun getPlatformName(): String {
     return "Android"

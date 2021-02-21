@@ -1,4 +1,4 @@
-package com.darkrockstudios.apps.android
+package com.darkrockstudios.apps.nortional.android
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme

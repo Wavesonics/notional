@@ -1,4 +1,4 @@
-package com.darkrockstudios.apps.android
+package com.darkrockstudios.apps.nortional.android
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Shapes

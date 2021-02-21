@@ -12,7 +12,7 @@ version = "1.0"
 kotlin {
     jvm {
         compilations.all {
-            kotlinOptions.jvmTarget = "14"
+            kotlinOptions.jvmTarget = "15"
         }
     }
     sourceSets {
@@ -26,6 +26,12 @@ kotlin {
             }
         }
         val jvmTest by getting
+    }
+}
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(15))
     }
 }
 

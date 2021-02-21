@@ -1,4 +1,4 @@
-package com.darkrockstudios.apps.common
+package com.darkrockstudios.apps.notional.common.screens
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material.Button
@@ -6,6 +6,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import com.arkivanov.decompose.ComponentContext
+import com.darkrockstudios.apps.notional.common.Component
 
 
 class ProjectPicker(

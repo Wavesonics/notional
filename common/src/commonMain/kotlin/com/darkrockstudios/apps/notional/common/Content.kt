@@ -1,4 +1,4 @@
-package com.darkrockstudios.apps.common
+package com.darkrockstudios.apps.notional.common
 
 import androidx.compose.runtime.Composable
 
