@@ -20,7 +20,7 @@ class MainActivity : AppCompatActivity() {
         setContent {
             AndroidTheme {
                 Surface(color = MaterialTheme.colors.background) {
-                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
                         rootComponent(::AppRoot).render()
                     }
                 }
