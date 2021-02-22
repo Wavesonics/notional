@@ -30,15 +30,9 @@ class ProjectComponent(
     private val onFinished: () -> Unit
 ) : ComponentContext by componentContext, Component {
 
-
-
     fun onBackClicked() {
         onFinished()
     }
-
-    private data class Model(
-        val projectName: String = ""
-    )
 
     @Composable
     override fun render() {
@@ -57,10 +51,7 @@ fun ProjectScreen(component: ProjectComponent) {
 
         Column(Modifier.padding(16.dp)) {
             Row {
-                Modifier.padding(8.dp)
-
                 Button(onClick = component::onBackClicked) {
-                    Modifier.padding(8.dp)
                     Text("go back")
                 }
 
