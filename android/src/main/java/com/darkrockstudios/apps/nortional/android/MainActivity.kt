@@ -11,14 +11,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.arkivanov.decompose.extensions.compose.jetbrains.rootComponent
 import com.darkrockstudios.apps.notional.common.AppRoot
-import com.darkrockstudios.apps.notional.common.platform.AndroidSaveManager
+import com.darkrockstudios.apps.notional.common.platform.AndroidFileManager
 
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val saveManager = AndroidSaveManager(applicationContext)
+        val saveManager = AndroidFileManager(applicationContext)
 
         setContent {
             AndroidTheme {

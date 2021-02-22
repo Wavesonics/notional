@@ -4,8 +4,11 @@ import java.io.File
 import java.io.FileReader
 import java.io.FileWriter
 
-abstract class SaveManager {
-    protected abstract fun getRootDirectory(): File
+abstract class FileManager {
+    protected abstract fun getSystemUserDirectory(): File
+
+    private fun getRootDirectory() = File(getSystemUserDirectory(), "notional")
+    private fun getProjectDirectory(projectName: String) = File(getRootDirectory(), projectName)
 
     private fun getFile(project: String, path: String): File {
         val userDir = getRootDirectory()
@@ -56,7 +59,36 @@ abstract class SaveManager {
         }
     }
 
-    fun getProjects(): Array<String> {
-        TODO("Not yet implemented")
+    fun getProjects(): List<String> {
+        val projects = mutableListOf<String>()
+
+        val rootDir = getRootDirectory()
+        if (rootDir.isDirectory) {
+            val children = rootDir.listFiles()
+            for (child in children) {
+                if (child.isDirectory) {
+                    projects.add(child.name)
+                }
+            }
+        }
+
+        return projects
+    }
+
+    private fun validateProjectName(projectName: String): Boolean {
+        return projectName.isNotEmpty()
+    }
+
+    fun createProject(projectName: String): Boolean {
+        return if (validateProjectName(projectName)) {
+            val projectDirectory = getProjectDirectory(projectName)
+            if (projectDirectory.exists()) {
+                false
+            } else {
+                projectDirectory.mkdirs()
+            }
+        } else {
+            false
+        }
     }
 }

@@ -8,15 +8,15 @@ import com.arkivanov.decompose.push
 import com.arkivanov.decompose.router
 import com.arkivanov.decompose.statekeeper.Parcelable
 import com.arkivanov.decompose.statekeeper.Parcelize
-import com.darkrockstudios.apps.notional.common.platform.SaveManager
+import com.darkrockstudios.apps.notional.common.platform.FileManager
 import com.darkrockstudios.apps.notional.common.screens.ProjectComponent
-import com.darkrockstudios.apps.notional.common.screens.ProjectPicker
+import com.darkrockstudios.apps.notional.common.screens.ProjectPickerComponent
 import com.darkrockstudios.apps.notional.common.screens.ProjectPickerScreen
 import com.darkrockstudios.apps.notional.common.screens.ProjectScreen
 
 
 class AppRoot(
-    private val saveManager: SaveManager,
+    private val fileManager: FileManager,
     componentContext: ComponentContext
 ) : Component, ComponentContext by componentContext {
 
@@ -32,12 +32,16 @@ class AppRoot(
     private fun createChild(config: Config, componentContext: ComponentContext): Content =
         when (config) {
             is Config.ProjectPicker -> {
-                ProjectPicker(componentContext, onProjectSelected = ::onProjectSelected).asContent { ProjectPickerScreen(it) }
+                ProjectPickerComponent(
+                    fileManager = fileManager,
+                    componentContext = componentContext,
+                    onProjectSelected = ::onProjectSelected
+                ).asContent { ProjectPickerScreen(it) }
             }
             is Config.Project -> {
                 ProjectComponent(
                     componentContext,
-                    saveManager = saveManager,
+                    fileManager = fileManager,
                     projectName = config.projectName,
                     onFinished = { router.pop() }).asContent { ProjectScreen(it) }
             }

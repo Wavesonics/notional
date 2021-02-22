@@ -18,14 +18,14 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.arkivanov.decompose.ComponentContext
 import com.darkrockstudios.apps.notional.common.Component
-import com.darkrockstudios.apps.notional.common.platform.SaveManager
+import com.darkrockstudios.apps.notional.common.platform.FileManager
 
 
 private val testFile = "test_file"
 
 class ProjectComponent(
     componentContext: ComponentContext,
-    val saveManager: SaveManager,
+    val fileManager: FileManager,
     val projectName: String,
     private val onFinished: () -> Unit
 ) : ComponentContext by componentContext, Component {
@@ -43,7 +43,7 @@ class ProjectComponent(
 @Composable
 fun ProjectScreen(component: ProjectComponent) {
     val textState =
-        remember { mutableStateOf(TextFieldValue(component.saveManager.readFile(component.projectName, testFile))) }
+        remember { mutableStateOf(TextFieldValue(component.fileManager.readFile(component.projectName, testFile))) }
 
     Column {
         TopAppBar(title = { Text(text = "Project") })
@@ -57,7 +57,7 @@ fun ProjectScreen(component: ProjectComponent) {
 
                 Button(
                     onClick = {
-                        component.saveManager.writeToFile(component.projectName, testFile, textState.value.text)
+                        component.fileManager.writeToFile(component.projectName, testFile, textState.value.text)
                     }
                 ) {
                     Text("Write file")

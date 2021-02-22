@@ -29,6 +29,7 @@ kotlin {
                 api(compose.foundation)
                 api(compose.material)
                 api(compose.ui)
+                api(compose.animation)
 
                 implementation("com.arkivanov.decompose:decompose:0.1.8")
                 implementation("com.arkivanov.decompose:extensions-compose-jetbrains:0.1.8")
