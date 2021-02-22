@@ -1,10 +1,7 @@
 package com.darkrockstudios.apps.notional.common.screens
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
@@ -48,7 +45,7 @@ fun ProjectPickerScreen(component: ProjectPickerComponent) {
     Column {
         TopAppBar(title = { Text(text = "Projects") })
 
-        Row {
+        Column(modifier = Modifier.padding(16.dp)) {
             Text("New Project:")
             TextField(value = newProjectName.value, onValueChange = { value -> newProjectName.value = value })
             Button(onClick = {
@@ -60,13 +57,15 @@ fun ProjectPickerScreen(component: ProjectPickerComponent) {
             }) {
                 Text("Create New Project")
             }
-        }
 
-        Text("Projects:")
-        LazyColumn(modifier = Modifier.fillMaxHeight()) {
-            items(items = projects, itemContent = { projectName ->
-                ProjectRow(component, projectName)
-            })
+            Spacer(modifier = Modifier.padding(16.dp))
+
+            Text("Select Existing Project:")
+            LazyColumn(modifier = Modifier.fillMaxHeight()) {
+                items(items = projects, itemContent = { projectName ->
+                    ProjectRow(component, projectName)
+                })
+            }
         }
     }
 }
