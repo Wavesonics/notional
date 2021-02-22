@@ -5,7 +5,19 @@ import java.io.FileReader
 import java.io.FileWriter
 
 abstract class SaveManager {
-    protected abstract fun getFile(project: String, path: String): File
+    protected abstract fun getRootDirectory(): File
+
+    private fun getFile(project: String, path: String): File {
+        val userDir = getRootDirectory()
+        val projectDir = File(userDir, project)
+
+        if (!projectDir.exists()) {
+            projectDir.mkdirs()
+        }
+
+        val file = File(projectDir, path)
+        return file
+    }
 
     fun writeToFile(project: String, path: String, content: String) {
         val file = getFile(project, path)
