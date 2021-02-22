@@ -18,7 +18,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val saveManager = AndroidSaveManager()
+        val saveManager = AndroidSaveManager(applicationContext)
 
         setContent {
             AndroidTheme {

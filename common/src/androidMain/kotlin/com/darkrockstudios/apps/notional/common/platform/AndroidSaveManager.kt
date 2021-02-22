@@ -1,16 +1,19 @@
 package com.darkrockstudios.apps.notional.common.platform
 
+import android.content.Context
+import java.io.File
 
-class AndroidSaveManager : SaveManager() {
-    override fun getProjects(): Array<String> {
-        TODO("Not yet implemented")
-    }
 
-    override fun writeToFile(project: String, path: String, content: String) {
-        TODO("Not yet implemented")
-    }
+class AndroidSaveManager(private val appContext: Context) : SaveManager() {
+    override fun getFile(project: String, path: String): File {
+        val userDir = appContext.filesDir
+        val projectDir = File(userDir, project)
 
-    override fun readFile(project: String, path: String): String {
-        TODO("Not yet implemented")
+        if (!projectDir.exists()) {
+            projectDir.mkdirs()
+        }
+
+        val file = File(projectDir, path)
+        return file
     }
 }
