@@ -65,7 +65,7 @@ abstract class FileManager {
         val rootDir = getRootDirectory()
         if (rootDir.isDirectory) {
             val children = rootDir.listFiles()
-            for (child in children) {
+            children?.forEach { child ->
                 if (child.isDirectory) {
                     projects.add(child.name)
                 }
@@ -86,6 +86,47 @@ abstract class FileManager {
                 false
             } else {
                 projectDirectory.mkdirs()
+            }
+        } else {
+            false
+        }
+    }
+
+    private fun getSectionsDirectory(projectName: String): File {
+        val dir = File(getProjectDirectory(projectName), "sections")
+        if (!dir.exists()) {
+            if (dir.mkdirs()) {
+                println("Failed to make sections directory")
+            }
+        }
+        return dir
+    }
+
+    fun getSections(projectName: String): List<String> {
+        val sections = mutableListOf<String>()
+
+        val sectionsDir = getSectionsDirectory(projectName)
+        sectionsDir.listFiles()?.forEach { file ->
+            if (file.isFile) {
+                sections.add(file.name)
+            }
+        }
+
+        return sections
+    }
+
+    private fun validateSectionName(sectionName: String): Boolean {
+        return sectionName.isNotEmpty()
+    }
+
+    fun createSection(projectName: String, sectionName: String): Boolean {
+        return if (validateSectionName(sectionName)) {
+            val sectionsDir = getSectionsDirectory(projectName)
+            val sectionFile = File(sectionsDir, sectionName)
+            if (!sectionFile.exists()) {
+                sectionFile.createNewFile()
+            } else {
+                false
             }
         } else {
             false
