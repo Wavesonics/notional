@@ -2,6 +2,7 @@ package com.darkrockstudios.apps.notional.common.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -36,6 +37,8 @@ class ProjectComponent(
         return fileManager.createSection(projectName, sectionName)
     }
 
+    fun getSections() = fileManager.getSections(projectName)
+
     @Composable
     override fun render() {
         ProjectScreen(this)
@@ -44,10 +47,9 @@ class ProjectComponent(
 
 @Composable
 fun ProjectScreen(component: ProjectComponent) {
-    val textState =
-        remember { mutableStateOf(TextFieldValue(component.fileManager.readFile(component.projectName, testFile))) }
-
     val newSectionName = remember { mutableStateOf(TextFieldValue()) }
+    val sections = mutableStateOf(component.getSections().toMutableList())
+    val sectionName = remember { mutableStateOf(component.getSections().firstOrNull() ?: "") }
 
     Column {
         TopAppBar(title = { Text(text = component.projectName) })
@@ -65,7 +67,10 @@ fun ProjectScreen(component: ProjectComponent) {
                 TextField(value = newSectionName.value, onValueChange = { value -> newSectionName.value = value })
                 Button(onClick = {
                     val newSectionNameStr = newSectionName.value.text
-                    component.onNewSection(newSectionNameStr)
+                    if (component.onNewSection(newSectionNameStr)) {
+                        println("New section created, refreshing data ${sections.value.size} | ${component.getSections().size}")
+                        sections.value = component.getSections().toMutableList()
+                    }
                 }) {
                     Text("New Section")
                 }
@@ -74,44 +79,62 @@ fun ProjectScreen(component: ProjectComponent) {
 
                 LazyColumn(modifier = Modifier.fillMaxHeight()) {
                     items(
-                        items = component.fileManager.getSections(projectName = component.projectName),
-                        itemContent = { projectName ->
-                            SectionRow(component, projectName)
+                        items = sections.value,
+                        itemContent = { curSectionName ->
+                            SectionRow(curSectionName, { newSection -> sectionName.value = newSection })
                         })
                 }
             }
             Column(modifier = Modifier.weight(weight = 0.75f)) {
-                Button(
-                    onClick = {
-                        component.fileManager.writeToFile(component.projectName, testFile, textState.value.text)
-                    }
-                ) {
-                    Text("Write file")
+                if (sectionName.value.isNotEmpty()) {
+                    Editor(component, sectionName.value)
                 }
-
-                BasicTextField(
-                    value = textState.value,
-                    onValueChange = { value -> textState.value = value },
-                    modifier = Modifier.fillMaxSize()
-                        .border(1.dp, Color.Black)
-                        .padding(top = 8.dp)
-                        .background(color = Color.Gray)
-                )
             }
         }
     }
 }
 
 @Composable
-fun SectionRow(component: ProjectComponent, sectionName: String) {
+fun SectionRow(
+    sectionName: String,
+    onSectionSelected: (sectionName: String) -> Unit
+) {
     Surface(
         color = MaterialTheme.colors.surface,
         modifier = Modifier
-            .padding(8.dp)
-        //.clickable { component.selectProject(projectName) }
+            .clickable { onSectionSelected(sectionName) }
     ) {
-        Row {
+        Row(Modifier.padding(8.dp).fillMaxWidth()) {
             Text(sectionName)
         }
+    }
+}
+
+@Composable
+fun Editor(component: ProjectComponent, sectionName: String) {
+    val textState =
+        remember { mutableStateOf(TextFieldValue(component.fileManager.readFile(component.projectName, sectionName))) }
+
+    Column {
+        Row {
+            Text(sectionName)
+
+            Button(
+                onClick = {
+                    component.fileManager.writeToFile(component.projectName, testFile, textState.value.text)
+                }
+            ) {
+                Text("Save")
+            }
+        }
+
+        BasicTextField(
+            value = textState.value,
+            onValueChange = { value -> textState.value = value },
+            modifier = Modifier.fillMaxSize()
+                .border(1.dp, Color.Black)
+                .padding(top = 8.dp)
+                .background(color = Color.Gray)
+        )
     }
 }
