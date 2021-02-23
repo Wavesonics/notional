@@ -22,8 +22,9 @@ abstract class FileManager {
         return file
     }
 
-    fun writeToFile(project: String, path: String, content: String) {
-        val file = getFile(project, path)
+    fun writeSectionToFile(project: String, path: String, content: String) {
+        //val file = getFile(project, path)
+        val file = File(getSectionsDirectory(project), path)
 
         if (!file.exists()) {
             val parentDir = file.parentFile
@@ -49,7 +50,8 @@ abstract class FileManager {
     }
 
     fun readFile(project: String, path: String): String {
-        val file = getFile(project, path)
+        //val file = getFile(project, path)
+        val file = File(getSectionsDirectory(project), path)
         return if (file.exists()) {
             FileReader(file).use { reader ->
                 reader.readText()

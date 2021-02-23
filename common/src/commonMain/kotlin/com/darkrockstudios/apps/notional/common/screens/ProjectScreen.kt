@@ -50,6 +50,16 @@ fun ProjectScreen(component: ProjectComponent) {
     val newSectionName = remember { mutableStateOf(TextFieldValue()) }
     val sections = mutableStateOf(component.getSections().toMutableList())
     val sectionName = remember { mutableStateOf(component.getSections().firstOrNull() ?: "") }
+    val textState = remember {
+        mutableStateOf(
+            TextFieldValue(
+                component.fileManager.readFile(
+                    component.projectName,
+                    sectionName.value
+                )
+            )
+        )
+    }
 
     Column {
         TopAppBar(title = { Text(text = component.projectName) })
@@ -81,13 +91,51 @@ fun ProjectScreen(component: ProjectComponent) {
                     items(
                         items = sections.value,
                         itemContent = { curSectionName ->
-                            SectionRow(curSectionName, { newSection -> sectionName.value = newSection })
+                            SectionRow(curSectionName, { newSection ->
+                                sectionName.value = newSection
+                                textState.value = TextFieldValue(
+                                    component.fileManager.readFile(
+                                        component.projectName,
+                                        sectionName.value
+                                    )
+                                )
+                            })
                         })
                 }
             }
             Column(modifier = Modifier.weight(weight = 0.75f)) {
                 if (sectionName.value.isNotEmpty()) {
-                    Editor(component, sectionName.value)
+                    //Editor(component, sectionName.value)
+                    //val textState =
+                    //    remember { mutableStateOf(TextFieldValue(component.fileManager.readFile(component.projectName, sectionName.value))) }
+
+                    Column {
+                        Row {
+                            Text(sectionName.value)
+
+                            Button(
+                                onClick = {
+                                    println("Saving to file: ${sectionName.value}")
+                                    component.fileManager.writeSectionToFile(
+                                        component.projectName,
+                                        sectionName.value,
+                                        textState.value.text
+                                    )
+                                }
+                            ) {
+                                Text("Save")
+                            }
+                        }
+
+                        BasicTextField(
+                            value = textState.value,
+                            onValueChange = { value -> textState.value = value },
+                            modifier = Modifier.fillMaxSize()
+                                .border(1.dp, Color.Black)
+                                .padding(top = 8.dp)
+                                .background(color = Color.Gray)
+                        )
+                    }
                 }
             }
         }
@@ -107,34 +155,5 @@ fun SectionRow(
         Row(Modifier.padding(8.dp).fillMaxWidth()) {
             Text(sectionName)
         }
-    }
-}
-
-@Composable
-fun Editor(component: ProjectComponent, sectionName: String) {
-    val textState =
-        remember { mutableStateOf(TextFieldValue(component.fileManager.readFile(component.projectName, sectionName))) }
-
-    Column {
-        Row {
-            Text(sectionName)
-
-            Button(
-                onClick = {
-                    component.fileManager.writeToFile(component.projectName, testFile, textState.value.text)
-                }
-            ) {
-                Text("Save")
-            }
-        }
-
-        BasicTextField(
-            value = textState.value,
-            onValueChange = { value -> textState.value = value },
-            modifier = Modifier.fillMaxSize()
-                .border(1.dp, Color.Black)
-                .padding(top = 8.dp)
-                .background(color = Color.Gray)
-        )
     }
 }
